@@ -1,3 +1,4 @@
+#QuartzObsidian 
 ## 语法
 Quartz使用markdown文件作为主要的编写内容的方式，其完全支持markdown语法。同时Quartz还默认支持一些像 [Github Flavored Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) 的脚注、删除线、表格、任务清单和[Obsidian Flavored Markdown](https://help.obsidian.md/Editing+and+formatting/Obsidian+Flavored+Markdown)的`callout` `wikilinks`语法。
 
