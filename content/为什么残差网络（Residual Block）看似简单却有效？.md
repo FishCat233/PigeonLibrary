@@ -6,15 +6,11 @@
 
 从参考资料中，我们可以从公式角度解释为什么残差网络有效。
 
-$$\displaylines{
+$$
 \frac{\partial L}{\partial X_{Aout}} = \frac{\partial L}{\partial X_{Din}}\frac{\partial X_{Din}}{\partial X_{Aout}}
-\\
-\\
-而 X_{Din} = X_{Aout}+C(B(X_{Aout}))
-\\
-\\
-所以 \frac{\partial L}{\partial X_{Aout}} = \frac{\partial L}{\partial X_{Din}}\left( 1+\frac{\partial X_{Din}}{\partial X_{C}} \frac{\partial X_{C}}{\partial X_{B}} \frac{\partial X_{B}}{\partial X_{Aout}} \right)
-}$$
+$$
+$$而 X_{Din} = X_{Aout}+C(B(X_{Aout}))$$
+$$所以 \frac{\partial L}{\partial X_{Aout}} = \frac{\partial L}{\partial X_{Din}}\left( 1+\frac{\partial X_{Din}}{\partial X_{C}} \frac{\partial X_{C}}{\partial X_{B}} \frac{\partial X_{B}}{\partial X_{Aout}} \right)$$
 
 可见，就算在后向传播的时候C-B-A的梯度衰减，但D处的梯度会直接传递到A，所以增强了衰减的
 梯度。能够有效增加网络性能，但因为仍是连乘结构，因此依然会受到梯度衰减的影响。
