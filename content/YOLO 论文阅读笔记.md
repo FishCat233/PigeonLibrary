@@ -40,6 +40,7 @@ YOLO的方法是这样的：
 此外，每个单元格还预测了C个类别的概率（分类器）$Pr(Class_i|Object)$。**这些概率都是基于单元格是否含有这个物体这一条件，而不是和上面预测的边框有关。**
 
 在测试时，将连续的某类类别概率$Pr(Class_{i}|Object)$乘上边框的可信度预测$Pr(Object)*IOU_{pred}^{truth}$，可以得到：
+
 $$Pr(Class_{i}|Object) * Pr(Object) * IOU^{truth}_{pred} = Pr(Class_{i}) * IOU^{truth}_{pred}$$
 
 ……
