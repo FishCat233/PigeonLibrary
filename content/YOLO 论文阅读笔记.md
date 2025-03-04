@@ -2,7 +2,7 @@
 
 没想到yolo竟然是2015年的技术。
 
-作者是Joseph Redmon、Santosh Divvala、Ross Girshick、Ali Farhadi
+YOLO的作者是Joseph Redmon、Santosh Divvala、Ross Girshick、Ali Farhadi
 ## Abstarct
 Unified是说结构统一——一个网络就可以做到检测和分类。
 
