@@ -43,7 +43,42 @@ YOLO的方法是这样的：
 
 $$Pr(Class_{i}|Object) * Pr(Object) * IOU^{truth}_{pred} = Pr(Class_{i}) * IOU^{truth}_{pred}$$
 
-……
+### Network Design
+...
+
+### Training
+	We optimize for sum-squared error in the output of our
+	model. We use sum-squared error because it is easy to op-
+	timize, however it does not perfectly align with our goal of
+	maximizing average precision. It weights localization er-
+	ror equally with classification error which may not be ideal.
+	Also, in every image many grid cells do not contain any
+	object. This pushes the “confidence” scores of those cells
+	towards zero, often overpowering the gradient from cells
+	that do contain objects. This can lead to model instability,
+	causing training to diverge early on.
+
+他们使用了sum-squared error（SSE）误差值，因为很好优化。但是他们认为优化SSE和他们追求的**最大平均准确度**有所差别，**并且SSE将定位错误和分类错误看作是平等的，这可能会导致效果不够理想**。此外**如果图片中的单元格不包含物体，那会让单元格的可信度趋向0，时常导致总体的梯度倾向全都0而不是往有物体的方向靠**。这样子会让模型不稳定，而且早早出现预测偏差。
+
+*remedy n.改进方法，补偿，改善措施 v.改进，补偿，纠正*
+
+因此他们增强了预测框坐标带来的损失，并减少了框内不包含物体带来的损失。他们使用了$\lambda_{coor d}$和$\lambda_{noobj}$参数来实现这个。在论文中他们设置这两个值为5。
+
+同时SSE还将大边框和小边框的误差看成平等的了——实际上，大边框的小偏差损失应该比小边框的小偏差小。为此，他们预测的是边框的宽度、高度的平方根，而不是直接预测宽高。
+
+	YOLO predicts multiple bounding boxes per grid cell.
+	At training time we only want one bounding box predictor
+	to be responsible for each object. We assign one predictor
+	to be “responsible” for predicting an object based on which
+	prediction has the highest current IOU with the ground
+	truth. This leads to specialization between the bounding box
+	predictors. Each predictor gets better at predicting certain
+	sizes, aspect ratios, or classes of object, improving overall
+	recall.
+
+*这段我大脑要看烧了……*
+
+虽然YOLO在每个单元格都会预测多个框，**但是YOLO只会将与真实物体框IOU最高的那个框参与进损失的计算中**。因此这些框能够不尽相同、各具特色（也就是原文说的`specialization 专业化`），不同的框各自擅长检测不同的的物体。
 
 ## Conclusion
 结构简单。可以直接在整张图上训练。检测和分类直接在一个损失函数上训练。Fast YOLO很快，模型推广性很好。
