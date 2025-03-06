@@ -80,5 +80,66 @@ $$Pr(Class_{i}|Object) * Pr(Object) * IOU^{truth}_{pred} = Pr(Class_{i}) * IOU^{
 
 虽然YOLO在每个单元格都会预测多个框，**但是YOLO只会将与真实物体框IOU最高的那个框参与进损失的计算中**。因此这些框能够不尽相同、各具特色（也就是原文说的`specialization 专业化`），不同的框各自擅长检测不同的的物体。
 
+损失函数懒得写了，直接看图吧：
+![[Pasted image 20250306134459.png]]
+
+注意两点：第一点是只有在分类正确的时候才会算上分类错误的损失；第二点是只有在判定有物体在单元格内的时候才判定框框预测偏差的损失。
+
+训练过程自己看：
+
+	Our learning rate schedule is as follows: For the first
+	epochs we slowly raise the learning rate from 10−3 to 10−2.
+	If we start at a high learning rate our model often diverges
+	due to unstable gradients. We continue training with 10−2
+	for 75 epochs, then 10−3 for 30 epochs, and finally 10−4
+	for 30 epochs.
+	To avoid overfitting we use dropout and extensive data
+	augmentation. A dropout layer with rate = .5 after the first
+	connected layer prevents co-adaptation between layers [18].
+	For data augmentation we introduce random scaling and
+	translations of up to 20% of the original image size. We
+	also randomly adjust the exposure and saturation of the im-
+	age by up to a factor of 1.5 in the HSV color space.
+
+### Inference
+	Just like in training, predicting detections for a test image
+	only requires one network evaluation.
+*（作者的反复强调）*
+
+*spatial adj.空间的*
+
+	Often it is clear which grid cell an
+	object falls in to and the network only predicts one box for
+	each object. However, some large objects or objects near
+	the border of multiple cells can be well localized by multi-
+	ple cells. Non-maximal suppression can be used to fix these
+	multiple detections.
+
+*笑似，终于提到了这个问题。*
+
+通常将一个单元格预测一个框框住一个物体，但是有时候一些超大型的物体占了好几个单元格，这个时候怎么办呢？——作者使用了**非最大化抑制（Non-maximal suppression）**。
+
+*然后又拌了R-CNN和DPM一下www*
+
+	While not critical to performance as it
+	is for R-CNN or DPM, non-maximal suppression adds 2-
+	3% in mAP.
+
+### Limitations of YOLO
+ *又幻想了，幻想 YOLO 无人能挡，完美无瑕。*
+
+YOLO对空间有相当强的约束——规定了一个单元格只预测两个边界框和一个类。因此在遇到小物体扎堆的时候就炸了——比如说鸟群。
+
+	Since our model learns to predict bounding boxes from
+	data, it struggles to generalize to objects in new or unusual
+	aspect ratios or configurations. Our model also uses rela-
+	tively coarse features for predicting bounding boxes since
+	our architecture has multiple downsampling layers from the
+	input image.
+
+因为模型是从边界框中学习数据的，所以对于那些非常规的物体比例表现不好。此外因为使用了降采样来学习，学到的特征也是粗略的特征，也会表现不好。（TODO: 这段读起来有点蒙圈）
+
+
+
 ## Conclusion
 结构简单。可以直接在整张图上训练。检测和分类直接在一个损失函数上训练。Fast YOLO很快，模型推广性很好。
