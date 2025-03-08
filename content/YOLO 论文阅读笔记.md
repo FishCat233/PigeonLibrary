@@ -1,6 +1,6 @@
 [[1506.02640v5] You Only Look Once: Unified, Real-Time Object Detection](https://arxiv.org/abs/1506.02640v5)
 
-没想到yolo竟然是2015年的技术。
+没想到yolo竟然是2015年的技术。(U-Net也是同年的耶,甚至两个都是5月)
 
 YOLO的作者是Joseph Redmon、Santosh Divvala、Ross Girshick、Ali Farhadi
 ## Abstarct
