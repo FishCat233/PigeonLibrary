@@ -8,3 +8,4 @@ Front Matter 是 Obsidian 笔记的**前置内容**。可以理解成视频格�
 在 Obsidian 中可以使用 `Ctrl + ;` 来快速创建一个 Front Matter。
 
 ## Quartz Front Matter
+官方文档也没看明白，回头再写。
