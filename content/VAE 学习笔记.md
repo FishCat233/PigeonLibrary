@@ -69,5 +69,9 @@ VAE由两个核心网络组成，它们协同工作：
 
 希望这些补充能在概念层面进一步巩固您对VAE的理解！在实践中，理解重构损失和KL散度损失各自的作用通常就足以帮助您调试模型了。
 
+## 修改历史
+1. 初稿。2025-05-08
+2. 修改历史。2025-05-09 13:38:26
+
 ## 参考资料
 - [VAE变分自编码器原理解析_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1op421S7Ep/?spm_id_from=333.788.videopod.sections&vd_source=0065f6d72283dbbfeb8c4fb57774ef48)
