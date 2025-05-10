@@ -1,3 +1,7 @@
+---
+created: 2025-03-14
+updated: 2025-03-14
+---
 [[1505.04597] U-Net: Convolutional Networks for Biomedical Image Segmentation](https://arxiv.org/abs/1505.04597)
 
 ## 开篇吐槽
@@ -38,3 +42,4 @@
 
 这个网络有两个缺点：速度慢，在定位的时候没有很好的利用图片上下文（也就是局部的图片信息，因为用了池化层，导致全局信息不能和局部信息连接，同时局部信息也不能和全局信息连接）
 
+#todo 

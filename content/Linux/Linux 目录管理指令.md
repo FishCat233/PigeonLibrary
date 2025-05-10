@@ -1,3 +1,7 @@
+---
+created: 2025-03-03
+updated: 2025-03-03
+---
 ## Linux 文件目录
 与 Windows 不同，Linux 的目录是彻底的树形结构——而windows则是以盘符分开，各自盘符下有树形结构。
 

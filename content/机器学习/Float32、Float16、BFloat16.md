@@ -1,3 +1,7 @@
+---
+created: 2025-03-01
+updated: 2025-03-01
+---
 Float32：float point 32，又称FP32。32位浮点数。
 Float16：FP16，16位浮点数
 Bfloat16：BF16，指数位和FP32相同，但精度逼FP16差

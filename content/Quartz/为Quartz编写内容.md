@@ -1,6 +1,8 @@
 ---
 tags:
   - QuartzObsidian
+created: 2025-02-25
+updated: 2025-02-25
 ---
 
 ## 语法

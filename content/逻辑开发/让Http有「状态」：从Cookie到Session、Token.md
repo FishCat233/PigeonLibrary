@@ -4,6 +4,8 @@ tags:
   - Session
   - Token
   - Http
+created: 2025-03-23
+updated: 2025-03-23
 ---
 ## Cookie
 http是无状态的——意味着服务器不知道每一次http请求时用户端的状态情况。

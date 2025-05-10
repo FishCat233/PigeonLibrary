@@ -1,6 +1,8 @@
 ---
 tags:
   - "#QuartzObsidian"
+created: 2025-02-25
+updated: 2025-02-25
 ---
 Quartz 被设计为高度可配置的。即便你不懂代码，大部分你需要的配置项都可以在 `quartz.config.ts` 和 `quartz.layout.ts` 里面找到
 
