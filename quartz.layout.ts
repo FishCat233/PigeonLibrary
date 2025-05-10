@@ -8,8 +8,7 @@ export const sharedPageComponents: SharedLayout = {
   afterBody: [],
   footer: Component.Footer({
     links: {
-      GitHub: "https://github.com/jackyzha0/quartz",
-      "Discord Community": "https://discord.gg/cRFFHYye7t",
+      GitHub: "https://github.com/FishCat233",
     },
   }),
 }
@@ -28,6 +27,7 @@ export const defaultContentPageLayout: PageLayout = {
     Component.Search(),
     Component.Darkmode(),
     Component.Explorer(),
+    // Component.RecentNotes(),
   ],
   right: [
     Component.Graph(),
