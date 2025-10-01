@@ -40,8 +40,12 @@ export const defaultContentPageLayout: PageLayout = {
     Component.MobileOnly(Component.Spacer()),
     Component.Search(),
     Component.Darkmode(),
-    Component.Explorer(),
-    // Component.RecentNotes(),
+    Component.Explorer({
+      folderDefaultState: 'collapsed',
+    }),
+    Component.RecentNotes({
+      limit: 5,
+    }),
   ],
   right: [
     Component.Graph(),
