@@ -46,14 +46,14 @@ export const defaultContentPageLayout: PageLayout = {
     Component.Explorer({
       folderDefaultState: 'collapsed',
     }),
-    Component.RecentNotes({
-      limit: 5,
-    }),
   ],
   right: [
     Component.Graph(),
     Component.DesktopOnly(Component.TableOfContents()),
     Component.Backlinks(),
+    Component.RecentNotes({
+      limit: 5,
+    }),
   ],
 }
 
