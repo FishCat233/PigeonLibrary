@@ -1,7 +1,9 @@
 ---
 created: 2025-10-01
-updated: 2025-10-02
+updated: 2025-10-08
 ---
+慢慢踩吧，边踩边记。
+
 ## 第一回 Unity 2022.3.62fc1c1 与 Rider 2025.2
 Cinemachine Virtual Camera 的 inspector 打开就能报错。触发原因是用了 Rider 2025.2 作为 External Tools
 
