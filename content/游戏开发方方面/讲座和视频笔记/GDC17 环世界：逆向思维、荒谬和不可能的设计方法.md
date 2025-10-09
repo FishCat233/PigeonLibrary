@@ -1,3 +1,7 @@
+---
+created: 2025-10-09
+updated: 2025-10-09
+---
 [RimWorld: Contrarian, Ridiculous, and Impossible Game Design Methods](https://www.youtube.com/watch?v=VdqhHKjepiE)
 [GDC17|中配|环世界：逆向思维、荒谬和不可能的游戏设计方法——Contrarian Ridiculous Impossible Design Methods_环世界_游戏杂谈](https://www.bilibili.com/video/BV1LDdfYuEkb)
 
