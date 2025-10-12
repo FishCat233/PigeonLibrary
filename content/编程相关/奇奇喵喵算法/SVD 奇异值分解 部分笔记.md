@@ -1,3 +1,7 @@
+---
+created: 2025-10-12
+updated: 2025-10-12
+---
 [youtube.com/watch?v=vSczTbgc8Rc&list=LL&index=6](https://www.youtube.com/watch?v=vSczTbgc8Rc&list=LL&index=6)
 
 [代数明珠--奇异值分解（SVD）生动动画演示！_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV15k4y1p72z/)
