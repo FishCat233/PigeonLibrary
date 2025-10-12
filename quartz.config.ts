@@ -20,7 +20,6 @@ const config: QuartzConfig = {
     baseUrl: "library.whispery.top",
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "modified",
-    generateSocialImages: false,
     theme: {
       fontOrigin: "googleFonts",
       cdnCaching: true,
