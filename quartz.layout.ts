@@ -1,5 +1,7 @@
 import { PageLayout, SharedLayout } from "./quartz/cfg"
 import * as Component from "./quartz/components"
+import { SortFn } from "./quartz/components/PageList"
+import { QuartzPluginData } from "./quartz/plugins/vfile"
 
 /**排序 */
 const sortByModifiedDate: (f0: QuartzPluginData, f2: QuartzPluginData) => number = (
@@ -12,6 +14,24 @@ const sortByModifiedDate: (f0: QuartzPluginData, f2: QuartzPluginData) => number
 
   // 降序排列 (B - A)，所以最近修改的排在前面
   return dateB - dateA
+}
+
+const byModifiedDateAndAlphabetical: SortFn = (f1, f2): number => {
+  // Sort by date/alphabetical
+  if (f1.dates && f2.dates) {
+    // sort descending
+    return f2.dates?.modified!.getTime() - f1.dates?.modified!.getTime()
+  } else if (f1.dates && !f2.dates) {
+    // prioritize files with dates
+    return -1
+  } else if (!f1.dates && f2.dates) {
+    return 1
+  }
+
+  // otherwise, sort lexographically by title
+  const f1Title = f1.frontmatter?.title.toLowerCase() ?? ""
+  const f2Title = f2.frontmatter?.title.toLowerCase() ?? ""
+  return f1Title.localeCompare(f2Title)
 }
 
 // components shared across all pages
@@ -61,12 +81,12 @@ export const defaultContentPageLayout: PageLayout = {
     }),
   ],
   right: [
-    Component.Graph(),
+    // Component.Graph(), //等用明白obs在考虑图吧
     Component.DesktopOnly(Component.TableOfContents()),
     Component.Backlinks(),
     Component.RecentNotes({
-      limit: 3,
-      sort: sortByModifiedDate,
+      limit: 5,
+      sort: byModifiedDateAndAlphabetical,
     }),
   ],
 }
