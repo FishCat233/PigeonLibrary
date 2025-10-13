@@ -34,4 +34,26 @@ updated: 2025-10-08
 - 机器学习 (深度学习) [[机器学习/index|机器学习]]
 - 编程语言笔记 [[编程相关/编程语言/index|编程语言]]
 - 小说创作有感笔记 [[小说写作感触/index|小说写作感触]]
-- 数学学习笔记 [[/杂七杂八/数学/index|数学]]
+- 数学学习笔记 [[杂七杂八/数学/index|数学]]
+
+```contributionGraph
+title: Contributions
+graphType: default
+dateRangeValue: 365
+dateRangeType: LATEST_DAYS
+startOfWeek: 1
+showCellRuleIndicators: true
+titleStyle:
+  textAlign: center
+  fontSize: 15px
+  fontWeight: normal
+dataSource:
+  type: PAGE
+  value: '"public"'
+  dateField:
+    type: FILE_CTIME
+fillTheScreen: false
+enableMainContainerShadow: false
+cellStyleRules: []
+
+```
