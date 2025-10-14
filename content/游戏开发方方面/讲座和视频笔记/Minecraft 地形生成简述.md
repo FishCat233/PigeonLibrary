@@ -1,6 +1,6 @@
 ---
-created: "2025-10-13"
-updated: "2025-10-13"
+created: 2025-10-13
+updated: 2025-10-14
 ---
 [Minecraft terrain generation in a nutshell](https://www.youtube.com/watch?v=CSa5O6knuwI)
 
