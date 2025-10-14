@@ -1,6 +1,6 @@
 ---
 created: 2025-10-09
-updated: 2025-10-10
+modified: 2025-10-10
 ---
 [RimWorld: Contrarian, Ridiculous, and Impossible Game Design Methods](https://www.youtube.com/watch?v=VdqhHKjepiE)
 
