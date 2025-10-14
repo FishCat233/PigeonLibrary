@@ -1,3 +1,7 @@
+---
+created: 2025-10-08
+updated: 2025-10-08
+---
 ## GameObject
 **GameObject 是 Unity 的基本要素，也是主要的操作对象**。一个GameObject下面可以挂很多个Component来实现将不同功能汇聚在一起，组成一个概念上的「物体」的效果。
 
