@@ -1,21 +1,8 @@
 import { PageLayout, SharedLayout } from "./quartz/cfg"
 import * as Component from "./quartz/components"
 import { SortFn } from "./quartz/components/PageList"
-import { QuartzPluginData } from "./quartz/plugins/vfile"
 
 /**排序 */
-const sortByModifiedDate: (f0: QuartzPluginData, f2: QuartzPluginData) => number = (
-  f0,
-  f1,
-) => {
-  // 获取修改时间戳，如果不存在则使用创建时间
-  const dateA = f0.dates?.modified?.getTime() ?? 0
-  const dateB = f1.dates?.modified?.getTime() ?? 0
-
-  // 降序排列 (B - A)，所以最近修改的排在前面
-  return dateB - dateA
-}
-
 const byModifiedDateAndAlphabetical: SortFn = (f1, f2): number => {
   // Sort by date/alphabetical
   if (f1.dates && f2.dates) {

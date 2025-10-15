@@ -19,7 +19,7 @@ const config: QuartzConfig = {
     locale: "zh-CN",
     baseUrl: "library.whispery.top",
     ignorePatterns: ["private", "templates", ".obsidian"],
-    defaultDateType: "modified",
+    defaultDateType: "created",
     theme: {
       fontOrigin: "googleFonts",
       cdnCaching: true,
