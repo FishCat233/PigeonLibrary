@@ -265,3 +265,6 @@ Vector::Vector(int s):elem{new double[s]}, sz{s} {
 用的时候直接 `import Vector;` 就行了。
 
 *其实就是终于适应了 OOP 的办法进行模块化，include 还是古法模块化。*
+
+### 命名空间
+
