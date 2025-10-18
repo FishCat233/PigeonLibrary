@@ -1,6 +1,6 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-17"
+created: 2025-10-17
+updated: 2025-10-18
 ---
 [速通Unity核心内容.08-用户界面(UI)](https://www.bilibili.com/video/BV111coeaEK3/)
 
