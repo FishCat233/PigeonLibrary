@@ -877,7 +877,61 @@ Num sum(Seq s, Num n);
 
 就是用概念不同来重载。编译器会选择满足最严格参数需求的版本。
 
+标准库 advance() 函数向前移动迭代器。
+
+```cpp
+template<forward_iterator Iter>
+void advance(Iter p, int n) {
+	while (n--) ++p;
+}
+
+template<random_access_iterator Iter>
+void advance(Iter p, int n) {
+	p += n;
+}
+```
+
 跟其他的重载一样，这是编译时机制，没有任何运行时开销，如果编译器找不到最佳选择，就会报告二义性错误。基于概念的重载比一般的重载效率更高。
 
 #### 有效代码
 
+*这下知道为什么要起名了。*
+
+不使用标准库的概念 `random_access_iterator` 而是手动实现的话，可以是这样：
+
+```cpp
+template<forward_iterator Iter>
+requires requires(Iter p, int i) { p[i]; p+i; }  // Iter 拥有下标操作以及整数操作
+void advance(Iter p, int n) {
+	while (n--) ++p;
+}
+```
+
+第一个 `requires` 开始一个 **requirements 子句**，第二个 `requires` 开始一个 **requires 表达式**。
+
+第二个 requires 表达式是一个谓词，如果代码为有效代码则为 true，否则为 false。
+
+> 我认为requires表达式可以被叫作泛型编程中的汇编代码。与常规汇编代码一样，requires子句非常灵活，并且不隐含任何编码规则。从某种程度上说，它是泛型编程中的底层代码，如同说汇编代码是普通编程的底层代码一样。因此，与汇编代码类似，requires子句不该出现在常规代码中。它们应当隐藏在抽象的具体实现中。如果你在你的代码中看到了requires requires子句，很可能这样的代码过于底层，最终可能产生潜在问题。
+
+*没得喷，这个设计确实神。*
+
+上面那段 `requires requires` 代码是刻意的、不优雅的黑客行为。
+
+#### 定义概念
+
+*终于要来了吗，我很好奇为什么要把定义概念放在应用概念后。甚至早在模板那章就提及概念使用而不是概念定义——让当时的我我一头雾水。*
+
+直接用库的优秀概念比写新的要容易。不过写新的概念也很容易。
+
+概念是一个编译时谓词，指示了一个或多个类型如何被使用。
+
+```cpp
+template<typename T>
+concept Equality_comparable =
+	requires (T a, T b) {
+		{ a == b } -> Boolean;  // 使用 == 比较 T 类型变量
+		{ a != b } -> Boolean;
+	}
+```
+
+#todo 
