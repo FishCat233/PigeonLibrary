@@ -537,6 +537,8 @@ public:
 
 C++ 标准库中， RAII 无处不在。
 
+需要注意的是，资源管理不止是内存资源，也包括非内存资源比如说文件读写资源等等。
+
 ### 操作符重载
 
 *好像也没什么好记的。*
@@ -594,7 +596,7 @@ constexpr complex<double> operator""i(long double arg) {
 - 用传值的方式返回容器（依赖拷贝消除和移动以提高效率）
 - 对于容量较大的操作数，用 const 引用作为参数类型。
 - 避免显式使用 std::copy()
-- 用 RAII 管理所有资源——内存和非内存资源。
+- **用 RAII 管理所有资源——内存和非内存资源。**
 - 如果将类型的 <=> 定义为非默认值，那么也要定义 == 操作符
 - 遵循标准库容器设计
 
@@ -719,4 +721,163 @@ struct Final_action {
 // 调用时
 finally([&]{free(p);}) // 离开作用域时自动调用匿名函数，使用 free 释放
 ```
+
+### 模板机制
+
+想定义好的模板，我们需要一些支撑性的语言设施。
+- 依赖类型的值：模板变量（*这里似乎是笔误，原文说的是参数模板，但是指向的底下标题却是「模板变量」）*
+- 类型与模板的别名：别名模板
+- 编译时选择机制：`if constexpr`
+- 编译时查询值与表达式属性的机制：`requires` 表达式
+
+除此外，`constexpr 函数` 和 `static_asserts` 也经常出现在模板设计和使用中。
+
+#### 模板变量
+
+依赖模板类型的常量或变量
+
+```cpp
+template<class T>
+constexpr T viscosity = 0.4;
+
+template<class T>
+constexpr space_vector<T> external_acceleration = { T{}, T{-9.8}, T{} };
+
+auto vis2 = 2*viscosity<double>;
+auto acc = external_acceleration<float>;
+```
+
+*这是 C++14 出的功能。*
+
+标准库使用模板变量来提供数学常数，比如说 pi 以及 log2e.
+
+#### 别名
+
+可以这么起别名。
+
+```cpp
+using size_t = unsigned int;
+```
+
+意思是 `size_t` 是 `unsigned int` 的别名。
+
+有参数的模板类型经常针对特定参数提供特定别名。
+
+```cpp
+template<typename T>
+class Vector {
+public:
+	using value_type = T;
+	// ...
+}
+
+template<typename C>
+using Value_type = C::value_type;
+
+template<typename Container>
+void algo(Container& c) {
+	Vector<Value_type<Container>> vec;
+}
+```
+
+*我查了一下，C++20有适用于 Range 的简略写法。不过讨论回记录类型本身，其实可以省略中间变量，只要 C++11 以上就能用的语法 `Vector<typename Container::value_type> vec;` *
+
+此外别名也可以通过绑定模板的部分参数来定义新的模板。
+
+```cpp
+template<typename Key, typename Value>
+class Map {
+	// ...
+}
+
+template<typename Value>
+using String_map = Map<string,Value>
+
+String_map<int> m; // Map<string,int>
+```
+
+#### 编译时 if
+
+使用编译时 if 让模板决定根据具体类型使用哪种方案。
+
+```cpp
+void update(T& target) {
+	// ...
+	if constexpr(is_trivially_copyable_v<T>)
+		simple_and_fast(target);  // 对于 PDO 类型
+	else
+		slow_and_safe(target);  // 对于复杂类型
+	//...
+}
+```
+
+`is_trivially_copyable_v<T>` 是一个类型谓词，表明类型是否可以以较小的代价被拷贝。
+
+编译器只会编译所选择的 if constexpr 分支。这个方案提供了最佳性能以及最佳的局部性。
+
+此外需要注意的是这不是编译器宏，所以 `if constexpr` 不是文本处理机制。
+
+### 建议
+
+- 用模板表达那些用于多种参数类型的算法。
+- 用模板实现容器。
+- **模板是类型安全的，但是对于无约束的模板，检查发生得太晚了。**
+- 把函数对象作为算法的参数。
+- 如果简单的函数对象只在某处使用一次，不妨使用匿名函数。
+- **不能把虚函数成员定义成模板成员函数。**
+- 使用 finally() 为不带析构函数且需要「清理操作」的类型提供 RAII；
+- 使用 if constexpr 条件编译提供替代实现，不会存在运行时开销。
+
+## 第8章 概念和泛型编程
+
+*C++20 超新特性。当然对于这本书来说是超新，对于这篇博客来说已经是 5 年前了。*
+
+> 应该把模板用在哪儿呢？换句话说，模板会让哪些程序设计技术更有效呢？模板提供了以下功能：
+> - 在不丢失信息的情况下将类型（以及值和模板）作为参数传递的能力。这意味着可以表达的内容具有很大的灵活性以及具有内联的绝佳机会，当前的实现充分利用了这一点。
+> - 有机会在实例化时将来自不同上下文的信息捏合在一起，这意味着有进行针对性优化的可能。
+> - 把值作为模板参数传递的能力，也就是在编译时计算的能力。
+> 
+> 总而言之，模板为编译时计算和类型控制提供了强有力的机制，使得我们可以编写出更加简洁高效的代码。记住，类可以包含代码和值。
+
+模板的最常见应用是支持 **泛型编程（generic programming）**，泛型编程主要关注通用的算法设计。
+
+*原来 generic 是指通用，虽然这么说好像在说原来 apple 是苹果一样奇怪，但我还是去想泛型编程的作用而不是当只知道凭直觉用。*
+
+### 概念
+
+使用概念来进行模板参数的限定。
+
+ 例如 `range_value_t<Seq>` 表示的是序列中的元素类型。`Arithmetic<X,Y>` 则表示 X 和 Y 能进行算术运算。
+
+概念可以这么使用。
+
+```cpp
+template<Sequence Seq, Number Num>
+	requires Arithmetric<range_value_t<Seq>, Num>
+Num sum(Seq s, Num n);
+```
+
+> `requires Arithmetric<range_value_t<Seq>, Num>` 被称作 `requirements` 子句。
+
+*谁发明的「概念」，「requirements子句」这都要起别名吗。*
+
+`template<Sequence Seq>` 就是 `requires Sequence<Seq>` 更简单的写法。
+
+ 不支持 concept 的代码，可以把代码用注释的形式写出来：
+
+```cpp
+template<typename Seq, typename Num>
+	// requires Arithmetic<range_value_t<Sequence>,Number>
+Num sum(Seq s, Num n);
+```
+
+*难蚌，真就人脑一个编译器了。不过重点还是把模板设计的约束条件写清楚。*
+
+#### 基于概念的重载
+
+就是用概念不同来重载。编译器会选择满足最严格参数需求的版本。
+
+跟其他的重载一样，这是编译时机制，没有任何运行时开销，如果编译器找不到最佳选择，就会报告二义性错误。基于概念的重载比一般的重载效率更高。
+
+#### 有效代码
 
