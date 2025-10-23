@@ -926,12 +926,70 @@ void advance(Iter p, int n) {
 概念是一个编译时谓词，指示了一个或多个类型如何被使用。
 
 ```cpp
-template<typename T>
+template<typename T, typename T2=T>
 concept Equality_comparable =
-	requires (T a, T b) {
+	requires (T a, T2 b) {
 		{ a == b } -> Boolean;  // 使用 == 比较 T 类型变量
 		{ a != b } -> Boolean;
 	}
 ```
+
+`Boolean` 意味着类型也能作为条件。
+
+`typename T2=T` 表示没有指定第二个模板参数和`T`相同，称为 **默认模板参数**。
+
+定义数字概念：
+```cpp
+template<typename T, typename U=T>
+concept Number = 
+	requires(T x, U y) {
+		x+y; x-y; x*y; x/y;
+		x+=y; x-=y; x*=y; x/=y;
+		x=x;  // 拷贝
+		x=0;
+	}
+```
+
+Arithmetic 概念：
+```cpp
+template<typename T, typename U=T>
+concept Arithmetic = Number<T, U> && Number<U, T>;
+```
+
+模板产生的检查会从模板定义推迟到模板实例化时，好处是：
+- 在开发过程中使用不完整的概念，允许在开发过程中积累经验，渐进式地完善检查。
+- 可以将调试信息、跟踪信息、遥测信息等代码插入模板，而不会影响它的接口。
+
+*接着便是先前我想到过的 auto 关键字。在 C++20，函数里面的 auto 参数会让函数自动变成函数模板。*
+
+可以用概念修饰  auto。
+
+```cpp
+Arithmetic auto twice(Arithmetic auto x) { return x+x; }
+```
+
+### 泛型编程
+
+概念并不仅仅是一个语法记法，也是描述语义的基本要素。目前并没有任何语言支持用来表示语义，所以只能依赖专业知识和大众公式来确保概念语义的正确。
+
+从一段或者几段实体代码生成一段泛型代码的同时保持原有性能，这种行为叫作**提升**
+**（lifting）**。从而，最佳的开发模板的方法通常是：
+
+> - 首先，写一个实体代码版本。
+> - 调试，测试，然后测量它们。
+> - 最后，将实体类型转化为类模板参数。
+
+举例是 print：
+
+```cpp
+template<Printable T, Printable... Tail>
+void print(T head, Tail... tail) {
+	cout << head << ' ';
+	if constexpr(sizeof...(tail)> 0)
+		print(tail...);
+}
+```
+
+
 
 #todo 
