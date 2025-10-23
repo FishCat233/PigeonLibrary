@@ -1,6 +1,6 @@
 ---
 created: 2025-10-17
-updated: 2025-10-20
+updated: 2025-10-23
 title: C++ 之旅 第三版 读书笔记
 ---
 也是来品读这本神作。
@@ -979,6 +979,8 @@ Arithmetic auto twice(Arithmetic auto x) { return x+x; }
 > - 调试，测试，然后测量它们。
 > - 最后，将实体类型转化为类模板参数。
 
+### 可变参数模板
+
 举例是 print：
 
 ```cpp
@@ -990,6 +992,21 @@ void print(T head, Tail... tail) {
 }
 ```
 
+参数声明后面的 `...` 叫作参数包。
 
+还有折叠表达式
+
+```cpp
+template<Number T>
+int sum(T... v) {
+	return (v + ... + 0);
+}
+```
+
+这里是右折叠，从零开始，最先做运算的是最右边的元素。
+
+左折叠的写法是 `(0+...+v)` .
+
+折叠表达式目前仅限用于简化可变参数模板的实现。
 
 #todo 
