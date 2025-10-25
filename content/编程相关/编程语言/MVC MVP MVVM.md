@@ -12,6 +12,9 @@ MVVM则是MVP基础上将逻辑和界面紧紧联系（通过双向绑定来实�
 
 许多人写的MVC等其实不算标准，也没法分类是MVC MVP 还是MVVM，但是那些架构能跟这三个沾边，基本上都遵循了界面逻辑数据三分代码的思路。
 
+> [!TIP]
+> MVC、MVP、MVVM 的最后一个也就是 Controller、Presenter、ViewModel 其实在三个框架中位置是相似的、作用相同的，所以本文说的 Controller 基本涵盖了另外两个.
+
 ## Model
 
 模型一般就是经典的数据类。此外类的方法还可能提供了数据的计算办法。
@@ -31,3 +34,21 @@ MVVM则是MVP基础上将逻辑和界面紧紧联系（通过双向绑定来实�
 核心点在于 **只关心如何使用数据。**
 
 某种意义上，控制器给视图呈现数据也是一种操作，所以在一些结构中也有控制器传数据给视图进行显示的操作。
+
+## 各种架构的细节
+
+### MVC
+
+MVC 是 View 监听 Model 变化，并且 View 调用 Controller 对 Model 进行操作。（经典 MVC）
+
+另一种 MVC 是 Controller 操作 Model 之后，依然使用 Controller 更新 View。
+
+### MVP
+
+MVP (Presenter) 是让 Presenter 同时操作 View 和 Model。
+
+### MVVM
+
+ViewModel 数据绑定了，用框架自动更新 View 和 Model 的数据。
+
+*比起另外两者，MVVM 双向绑定很强大，但是手搓也挺复杂的感觉。回头有空我写写试试再评价。*
