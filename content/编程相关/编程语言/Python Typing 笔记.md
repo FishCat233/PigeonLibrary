@@ -48,11 +48,63 @@ def sum(a: int, b: int) -> int:
 
 一般可以用 `[]` 来进行具体的类型指定，比如说 `dict[str, int]` 代表 key 为 str 类型，value 为 int 类型的字典。 *可以类比 C++ 的 <>*
 
-```cpp
+```python
 a: list[str] = [1,2,3]
 b: dict[str, float] = {"apple": 0.75, "banana": 1.25}
-c: tuple[int, ...] = (1, 2, 3) // ... 意思就是后面的和前面的一样 tuple[int, int, int]
+c: tuple[int, ...] = (1, 2, 3) # ... 意思就是后面的和前面的一样 tuple[int, int, int]
 d: set[int] = {101, 102, 103}
+```
+
+有一个 TypedDict 也不错，使用类来定义字典的类型。
+
+```python
+from typing import TypedDict, List
+
+# 1. 定义 TypedDict 结构
+class UserProfile(TypedDict):
+    """
+    定义一个字典接口，必须包含 'name' 和 'age' 两个键。
+    默认情况下，所有声明的键都是必需的 (required=True)。
+    """
+    name: str
+    age: int
+    # 也可以定义可选的键（需要 Python 3.11+ 或使用 NotRequired/Required）
+    # is_active: bool  # 假设是必需的
+    hobbies: List[str] # 假设是必需的
+
+# 2. 使用 TypedDict 作为函数参数的类型约束
+def process_user_data(user_data: UserProfile) -> str:
+    """
+    接受符合 UserProfile 结构的字典作为参数。
+    """
+    if user_data['age'] >= 18:
+        return f"{user_data['name']} 是一个成年人。"
+    else:
+        return f"{user_data['name']} 是一个未成年人。"
+
+# 3. 传入符合条件的字典 (运行时是一个普通的 dict)
+valid_user = {
+    'name': 'Alice',
+    'age': 25,
+    'hobbies': ['reading', 'coding']
+}
+print(process_user_data(valid_user))
+# 输出: Alice 是一个成年人。
+
+# 4. 静态类型检查示例（不会在运行时报错，但 mypy 会捕获）：
+# invalid_user_missing_key = {
+#     'name': 'Bob',
+#     'age': 30
+#     # 缺少 'hobbies' 键，mypy 会报错
+# }
+# process_user_data(invalid_user_missing_key) 
+
+# invalid_user_wrong_type = {
+#     'name': 'Charlie',
+#     'age': 'twenty', # 值的类型错误，mypy 会报错
+#     'hobbies': ['hiking']
+# }
+# process_user_data(invalid_user_wrong_type)
 ```
 
 ## Moderate
