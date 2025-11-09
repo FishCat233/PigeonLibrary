@@ -1,6 +1,6 @@
 ---
 created: 2025-10-17
-updated: 2025-10-23
+updated: 2025-11-09
 title: C++ 之旅 第三版 读书笔记
 ---
 也是来品读这本神作。
@@ -1076,6 +1076,8 @@ string_view 是只读的。如果想要写版本的，用 span。
 
 string_view 要当成指针用，因为可能会造成越界访问。
 
+at() 会产生异常。
+
 ```cpp
 string_view bad() {
 	string s = "Once upon a time.";
@@ -1099,4 +1101,30 @@ regex pat {R"(\w{2}\s*\d{5}(-\d{4})?)"};
 
 regex_match 正则和字符串匹配
 regex_search 搜索和正则匹配的字符串
-regex_replace 
+regex_replace 替换
+regex_iterator 遍历匹配结果和子匹配
+regex_token_iterator：遍历未匹配部分
+
+> 正则表达式的语法和语义的设计目标是使之能被编译成可高效运行的自动机[Cox,2007]，这个编译过程是由regex类型在运行时完成的。
+
+用的是 ECMA 标准的变体
+
+可以用 regex_iterator 遍历流。`using sregex_iterator = regex_iterator<string>`.
+
+### 建议
+
+- 返回 string 应用传值方式，依赖移动语义和拷贝消除
+- 直接或间接使用 substr() 和 replace() 操作子字符串
+- 使用范围 for 来安全地降低越界检查要求
+- 需要用范围检测时，用 at() 而不是 []
+- 当需要优化性能的时候，应该使用 [] 而不是 at()
+- 只有迫不得已的时候，采用 c_str() 和 data()
+- 输入放进 string 不会溢出。 *肯定啊，有 SSO*
+- 使用 stringstream 或者更通用的值提取函数（`to<X>`) 将字符串转换为数值。
+- 可以用 basic_string 构造适用于任何类型字符组成的字符串。
+- 字符串字面量后面加 sv 可以表示标准库 string_view 类型字面量。
+- 将 regex 用于正则表达式的大部分常规用途。
+- 使用正则表达式注意节制，它很容易变成难懂的语言。
+- 用 regex_iterator 来遍历流并查找给定模式
+
+#todo 
