@@ -1248,9 +1248,9 @@ void producer() {
 }
 ```
 
-*太深奥了，感觉得看多态内存相关补一下了后面。*
+*太深奥了，感觉得看多态内存相关补一下了后面……好吧，我脑抽了，这个多态内存资源就如其名了，其实是内存的多态释放和分配。std::pmr::memory_resource 类提供了一个接口，可以通过这个接口来进行多态的内存释放和分配，适应多样化的内存性能需求。*
 
-多态资源必须从 memory_resource 派生，并且定义了成员函数 allocate()、deallocate() 和 is_equal().
+多态内存资源必须从 memory_resource 派生，并且定义了成员函数 allocate()、deallocate() 和 is_equal().
 
 ### 容器概述
 
