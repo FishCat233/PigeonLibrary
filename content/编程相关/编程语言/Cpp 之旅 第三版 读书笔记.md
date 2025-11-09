@@ -1040,4 +1040,63 @@ void g(vector<int>& v) {
 - 使用 ranges 时，显式限定算法名称。
 - 如有可能，尽量用 import 模块代替 `#inclued` 头文件。
 
-#todo 
+## 第10章 字符串和正则表达式
+
+C++ 有 string 类型，也有 string_view 类型——以容器方式访问字符序列，不论是在 std::string 还是 `char[]`。
+
+string 和 regex 都支持多种字符类型比如说 unicode.
+
+### string 类型
+
+用 + 可以对字符串进行链接。string 定义了移动构造函数，所以用传值方式返回也同样高效。
+
+string.substr 提取子串，string.replace 替换，toupper 大写。
+
+可以用`[]`索引 string，at() 类似。
+
+可以和 string、c风格字符串、字面量比较。
+
+用 c_str() 和 data() 可以以 c风格字符串 只读访问 string 的内容。
+
+string 类型字面量的后缀是 s （`std::literals::string_literals`）
+
+### 字符串实现
+
+用了 短字符串优化技术 SSO，意思是短字符串会被存在 string 对象内部，长字符串会被存在 自由存储 中。
+
+*不过标准没规定要多少字符就扔自由存储，这要看具体实现。*
+
+为了处理多字符集，标准库给了一个通用的字符串模板 `basic_string` ， string 实际上是这个模板的实例化 `using string = basic_string<char>;`
+
+### 字符串视图
+
+字符串视图出现，是为了解决未出现在标准库（即自定义）字符串类型传递子串的问题。string_view 本质上是（指针，长度）对，标明了一个字符串序列。
+
+string_view 是只读的。如果想要写版本的，用 span。
+
+string_view 要当成指针用，因为可能会造成越界访问。
+
+```cpp
+string_view bad() {
+	string s = "Once upon a time.";
+	return {&s[5], 4};
+}
+```
+
+返回前 s 就已经销毁了。
+
+### 正则表达式
+
+`<regex>`
+
+一个例子是这样：
+
+```cpp
+regex pat {R"(\w{2}\s*\d{5}(-\d{4})?)"};
+```
+
+`R"()"` 这种就是 **原始字符串字面量 raw string literal**。这种原始字符串字面量不用转义。
+
+regex_match 正则和字符串匹配
+regex_search 搜索和正则匹配的字符串
+regex_replace 
