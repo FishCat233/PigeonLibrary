@@ -1201,4 +1201,90 @@ int get_number(const string& s) {
 
 在给定了优秀的哈希函数的情况下，unordered_map 比 map 快得多，尤其是对大型容器而言。
 
+### 分配器
+*内存管理 + 容器 = 经典优化魔法*
+
+默认标准库容器用 new 和 delete 分配空间。这很好，但是某些情况会带来性能问题。
+
+> 假定有一个重要的、长时间运行的系统，其使用事件队列（18.4节）并且使用vector作为事件存储容器，元素以shared_ptr保存。在这种情况下，事件的最后一个用户会隐式地释放该事件：
+
+```cpp
+struct Event {
+	vector<int> data = vector<int>(512);
+}
+list<shared_ptr<Event>> q;
+
+void producer() {
+	for (int n = 0; n!=LOTS; ++n) {
+		lock_guard lk {m}; // 互斥信号量
+		q.push_back(make_shared<Event>());
+		cv.notify_one(); // 条件变量
+	}
+}
+```
+
+> 从逻辑上说，这样应该工作得很好。具备清晰的逻辑，代码也健壮、可维护。不幸的是，这会导致大量的内存碎片。当16个生产者与4个消费者处理了10万个事件后，6GB以上的内存被碎片吞噬。
+
+*经典碎片内存，所以对于长时间运行的系统，还是不能随便 new delete啊。*
+
+> 解决碎片问题的传统方案是使用内存池分配器重写代码。内存池分配器用来管理固定尺寸空间分配，并且一次性分配大量的对象，而不是每次申请单独分配。幸运的是，C++直接支持这个功能。内存池分配器定义在std命名空间的pmr（多态内存资源）子空间中：
+
+```cpp
+pmr::synchronized_pool_resource pool;
+
+struct Event {
+	vector<int> data = vector<int>{512, &pool};
+}
+
+list<shared_ptr<Event>> q {&pool};
+
+void producer() {
+	for (int n = 0; n!=LOTS; ++n) {
+		lock_guard lk {m}; // 互斥信号量
+		q.push_back(allocate_shared<Event,pmr::polymorphic_allocator<Event>> {&pool});
+		cv.notify_one(); // 条件变量
+	}
+}
+```
+
+*太深奥了，感觉得看多态内存相关补一下了后面。*
+
+多态资源必须从 memory_resource 派生，并且定义了成员函数 allocate()、deallocate() 和 is_equal().
+
+### 容器概述
+
+| 容器名                       | 内容                |
+| ------------------------- | ----------------- |
+| `vector<T>`               | 可变尺寸数组            |
+| `list<T>`                 | 双向链表              |
+| `forward_list<T>`         | 单向链表              |
+| `deque<T>`                | 双端队列              |
+| `map<K,V>`                | 关联数组              |
+| `multimap<K,V>`           | 关键字可重复的 map       |
+| `unordered_map<K,V>`      | 哈希查找实现的 map       |
+| `unordered_multimap<K,V>` | 哈希版本的多值 map       |
+| `set<T>`                  | 只有关键字没有值的 map（集合） |
+| `multiset<T>`             | 值可以出现多次的集合        |
+| `unordered_set<T>`        | 哈希版本的集合           |
+| `unordered_multiset<T>`   | 哈希版本的多值集合         |
+标准库还提供了容器适配器比如说 `queue<T>` `stack<T>` `priority_queue<T>`. 还有定长数组 `array<T,N>` 和 `bitset<N>`.
+
+*草了，好多细节。*
+
+注意一下 emplace_back 和 push_back 区别吧。
+
+> emplace操作（比如emplace_back()）获取元素构造函数的参数，并在容器中新分配的空间中直接构建对象，而不是将对象拷贝到容器中。例如，对于vector<pair<int，string>>类型，我们可以这样写：
+
+```cpp
+v.push_back(pair{1,"copy or move"}); // 赋值或者移动构造
+v.emplace_back(1, "build in place"); // 就地构造
+```
+
+不过上面这种简单情况，优化器会优化成同等性能。
+
+### 建议
+
+- 标准库容器定义一个序列
+-  
+
 #todo 
