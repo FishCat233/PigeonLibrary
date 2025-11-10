@@ -1730,3 +1730,5 @@ for (int x : r | views::filter(odd) | views::take(3)) // odd 是谓词
 - 如果迭代器对的样子变得冗长，用范围版本算法
 - 理想的类型应满足 relugar 概念。
 - 尽可能使用标准库的概念。
+
+#todo 
