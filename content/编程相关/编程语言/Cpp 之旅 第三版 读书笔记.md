@@ -1570,6 +1570,163 @@ v.emplace_back(1, "build in place"); // 就地构造
 
 ### 迭代器
 
+pass
 
+### 迭代器类型
+*迭代器的本质是什么？*
 
-#todo 
+省流：迭代器是一个泛型，也是一个 concept. 符合迭代器特征的都是迭代器.
+
+用户很少知道特定迭代器的类型，容器知道自己迭代器的类型，并且以规范定义的 `iterator` 和 `const_iterator` 给用户使用。
+
+有些情况下，迭代器不是成员类型，所以标准库提供了 `iterator_t<X>` 函数来统一接口，对定义的迭代器类型 `X` 可用。
+
+#### 流迭代器
+
+`istream_iterator<>` `ostream_iterator<>`
+
+### 使用谓词
+*这回真是谓词了，函数式的那种。*
+
+```cpp
+void f(map<string,int>& m) {
+	auto p = find_if(m, Greater_than{42}); // 谓词 Greater_than{}.
+}
+```
+
+Greater_than 是函数对象.
+
+```cpp
+struct Greater_than {
+	int val;
+	Greater_then(int v) : val{v} {}
+	bool operator() (const pair<string,int>& r) const {
+		return r.second > val;
+	}
+}
+```
+
+匿名函数也可以.
+
+```cpp
+auto p = find_if(m [](const auto& r) { return r.second > 42 });
+```
+
+### 标准库算法概览
+
+*懒得全部记完，记一些特殊的.*
+
+| name                         | note                                            |
+| ---------------------------- | ----------------------------------------------- |
+| for_each                     | 遍历执行 f(x)                                       |
+| find_if                      | 如果满足 f(x)                                       |
+| count_if                     | 计数和if                                           |
+| replace_if                   |                                                 |
+| copy_if                      |                                                 |
+| move                         |                                                 |
+| unique_copy                  | 不拷贝连续重复元素                                       |
+| sort                         | 可以多加一个 f(x) 谓词作为排序标准                            |
+| `(p1,p2)=equal_range(b,e,v)` | `[pl:p2)是已排序序列[b:e）的子序列，其中元素的值都等于v:本质上等价于二分搜索v` |
+| merge                        | 归并序列，并将归并序列存到新序列。可以加 f(x) 作为比较函数                |
+
+每个算法都有 `<range>` 版本.
+
+算法会修改元素的值，但是不会添加和删除元素，因为序列并不包含底层容器的信息（*算法操作的是迭代器，不知道实际用的是什么容器*）。如果要添加删除，得自己手动直接操作容器。
+
+尽可能使用它们编写程序，而不是从头另起炉灶。
+
+### 并行算法
+
+有两种执行方式：
+
+- 并行执行：任务在多线程中完成。
+- 数组化执行（向量化执行）：在单线程用 SIMD 完成。
+
+`<execution>` 中有命名空间 execution，会有如下参数：
+
+- seq 顺序执行
+- par 如果可能，则并行执行
+- unseq 非顺序(数组化) 执行 如果可能
+- par_unseq 并行执行和数组化执行 如果可能
+
+考虑根据硬件使用并行算法。
+
+```cpp
+sort(par_unseq, v.begin(), v.end());
+```
+
+### 建议
+
+- 搜索的时候，通常返回输入序列的末尾位置来表示未找到。
+- 使用 using 类型别名清理杂乱的符号。 *当然不是让你在全局作用域用 using。*
+
+## 第14章 范围
+*range 实际上也是概念.*
+
+range 有如下定义方式：
+
+- 一对 bgein end 迭代器
+- 一对 bgein n，n是元素个数
+- 一对 bgein pred，pred 是谓词，如果 `pred(p)` 为真，则表示达到了范围末端。
+
+### 视图
+
+> 视图是查看范围的一种方式.
+
+```cpp
+filter_view v {r, [](int x) { return x%2; }}; // 查看 r 中的奇数
+for (int x : v)
+	cout << x << ' ';
+```
+
+类似还有 `take_view`，也就是拿前几个。
+
+可以不写名字直接玩视图嵌套。 *函数式管道：初现端倪*
+
+```cpp
+for (int x : take_view{ filter_view {r, [](int x) { return x%2; } } , 3})
+	cout << x << ' ';
+```
+
+![[Pasted image 20251110153452.png]]
+
+不抄了，自己看。
+
+视图和范围很相似，但区别在于 **视图不拥有元素本身**，释放范围的元素责任在范围身上。所以视图的生命周期不能大于范围的生命周期。
+
+视图复制开小很低，可以用值传递。
+
+### 生成器
+*范围工厂.*
+
+![[Pasted image 20251110154016.png]]
+
+*itoa_view 就类似 python 的 range 了，可以生成数字序列。*
+
+### 管道
+
+```cpp
+for (int x : r | views::filter(odd) | views::take(3)) // odd 是谓词
+	cout << x << ' ';
+```
+
+管道从左至右执行。
+
+这些过滤器函数定义在 `ranges::views` 中.
+
+> 视图和管道的实现涉及一些令人毛骨悚然的模板元编程，如果你对性能表示担忧，请确保先对你实现的性能进行测量，确定其是否符合需求。如果不符合，可以用传统的替代方案来实现。
+
+*我听劝，我不看怎么实现的了。*
+
+### 概念概述
+*怎么跑这章来了.*
+
+![[Pasted image 20251110154632.png]]
+
+*多少有点过于魔法了，用到我再记吧.*
+
+### 建议
+
+- 如果迭代器对的样子变得冗长，用范围版本算法
+- 理想的类型应满足 relugar 概念。
+- 尽可能使用标准库的概念。
