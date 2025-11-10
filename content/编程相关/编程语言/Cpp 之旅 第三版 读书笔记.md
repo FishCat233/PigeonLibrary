@@ -1286,7 +1286,103 @@ if (!ofs)
 
 #### 字符串流
 
-#todo 
+`<sstream>` 提供了从 string 读取数据以及向 string 写入数据的流。
+
+- istringstream 从 string 读数据。
+- ostringstream 向 string 写数据
+- stringstream 读写 string.
+
+`ostringstream.str()` `ostringstream.view()`.
+
+ostringstream 常见用途是对输出内容格式化，然后再输出到 gui. 反之则可用 istringstream 从 gui 读取格式化输入。
+
+#### 内存流
+
+> 从早期的C++开始，就有由用户设计的内存流，这样可以直接通过流来读写内存。这类流的最古老实例，比如strstream，数十年前就已经被废弃了，而它们的替代品，spanstream、ispanstream，以及ospanstream，在C++23之前还没有成为官方标准。虽然如此，但它们已经被广泛使用，你可以试试你的C++实现是否支持它们，或者自行搜索GitHub以寻找第三方实现。
+
+如果尝试将目标缓冲写溢出，那么目标的状态会变为 failure.
+
+#### 同步流
+
+多线程 I/O 可能会变得不可靠，除非：
+
+- 只有一个 thread 在使用流.
+- 访问流的操作进行了同步，确保同一时刻只有一个 thread 获得访问权.
+
+osyncstream 可以保证系列操作都可以完成，举例如下：
+
+```cpp
+void unsafe(int x, string& s) {
+	cout << x;
+	cout << s;
+}
+```
+
+不同的 thread 会引发数据竞争，osyncstream 类型可以避免。
+
+```cpp
+void safer(int x, string& s) {
+	osyncstream oss(cout);
+	oss << x;
+	oss << s;
+}
+```
+
+所有 thread 同时使用 osyncstream 就能保证不会互相影响。所以要么统一所有线程用 osyncstream，不然就只有一个 thread 用输入输出流。
+
+> **多线程同步需要一些技巧，因此请特别注意（第18章）。只要可能，就应当避免数据在 thread 之间共享。**
+
+### C 风格 I/O
+*也就是 C 标准库的 I/O.*
+
+省流：不建议使用。
+
+如果不使用 C 风格 I/O 并且在意 I/O 性能的话，可以用
+
+```cpp
+ios_base::sync_with_stdio(false);
+```
+
+### 文件系统
+
+> 不幸的是，文件系统的属性和操作它们的方式差异很大。为了解决这个问题，文件系统库 `<filesystem>` 为大多数文件系统的大多数工具提供了统一的接口。
+
+通过 filesystem 可以可移植的实现：
+
+- 表达文件系统路径，在文件系统导航
+- 检查文件类型和附加的权限许可
+
+```cpp
+path f = "dir/hello.cpp"
+
+assert(exists(f));
+
+if (is_regular_file(f))
+	cout << f << " is a file. its size is " << file_size(f) << '\n';
+```
+
+> 请注意，操作文件系统的程序通常与其他程序一起在计算机中运行。因而，在两个命令之间，文件系统的内容可以发生变化。例如，即使我们首先小心翼翼地断言f存在，但在下一行时，如果我们询问f是否是一个常规文件，这可能不再为真。
+
+path 是一个很复杂的类，能够处理各种各样的字符集。
+
+部分遍历目录和查询文件的类：
+
+| 类名                           | 备注     |
+| ---------------------------- | ------ |
+| path                         | 文件路径   |
+| filesystem_error             | 文件系统异常 |
+| directory_entry              | 目录项    |
+| directory_iterator           | 遍历目录   |
+| recursive_directory_iterator | 递归遍历目录 |
+
+*太长不写了，知道有这么一个标准库就行了，用到再查。*
+
+### 建议
+
+- iostream 是类型安全、类型敏感、易扩展的。
+- 必要时才用字符级输入
+- 读取输入数据的时候，总要考虑格式不正确的输入
+- 避免 endl (如果你不知道 endl 是什么，你就没有错过任何东西). *何意味？查了一下，说的是 endl 会强制冲刷输出缓冲区. 冲刷缓冲区性能开销可能是昂贵的。*
 
 ## 第12章 容器
 
