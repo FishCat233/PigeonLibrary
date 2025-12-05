@@ -30,7 +30,7 @@ export const sharedPageComponents: SharedLayout = {
       provider: 'giscus',
       options: {
         // from data-repo
-        repo: 'FishCat233/PigeonLibrary',
+        repo: 'FishCat233/FishCat233Library',
         // from data-repo-id
         repoId: 'R_kgDON-tQ1g',
         // from data-category
