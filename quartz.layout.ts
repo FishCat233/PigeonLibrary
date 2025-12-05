@@ -39,8 +39,6 @@ export const sharedPageComponents: SharedLayout = {
         categoryId: 'DIC_kwDON-tQ1s4CwGvI',
         // map
         mapping: 'pathname',
-        // strcit
-        strict: false,
       }
     }),
   ],
