@@ -36,6 +36,10 @@ OOP 作为一个很有年代感的编程范式，源自于早年间大型软件�
 
 [[有限状态机]]
 
+游戏设计模式：
+- [Game Programming Patterns](https://gameprogrammingpatterns.com/contents.html)
+- [游戏编程模式(上面这本的中译版）](https://gpp.tkchu.me/)
+
 ## 架构
 *软件开发的定式。*
 
