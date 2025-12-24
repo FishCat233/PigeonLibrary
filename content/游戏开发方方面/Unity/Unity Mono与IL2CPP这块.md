@@ -1,6 +1,6 @@
 ---
 created: 2025-09-26
-updated: 2025-09-26
+updated: 2025-12-24
 ---
 Mono 和 IL2Cpp 是 Unity 实现跨平台使用的两种不同的技术，目的都是为了让游戏能够顺利的在不同平台运行。
 
@@ -23,4 +23,6 @@ flowchart TD
     classDef endNode fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     class F endNode
 ```
+
+## IL2CPP
 
