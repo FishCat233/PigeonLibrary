@@ -11,7 +11,7 @@ mono 是一个由Xamarin公司所主持的自由开放源码项目。是C# CLI �
 mono 实现跨平台的办法是这样的：Mono C# 编译器把代码编译成 CIL (中间语言)，然后通过CLR虚拟机（类似Java的JVM，虚拟机是可以跨平台运行的）来运行CIL，达到代码跨平台的效果。
 
 ```mermaid
-flowchart TD
+flowchart LR
     A["开发者编写Unity C#代码<br/>(游戏业务逻辑)"] --> B["Mono C#编译器<br/>(核心组件1)"]
     B --> C["编译生成CIL中间语言<br/>(Common Intermediate Language)"]
     C --> D["不同平台的CLI虚拟机<br/>(核心组件2，适配Windows/Android/iOS等)"]
