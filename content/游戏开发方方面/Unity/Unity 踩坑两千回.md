@@ -1,6 +1,6 @@
 ---
 created: 2025-10-01
-updated: 2026-02-08
+updated: 2026-02-11
 ---
 慢慢踩吧，边踩边记。
 
@@ -48,3 +48,14 @@ public class SomeComponent : MonoBehaviour {
 
 *上面的重载限制数量让人以为有什么架构问题不能重复用属性修饰，结果实际上可以重复用属性修饰，只能说误解人的一坨\*\*。*
 
+## 【已解决】第四回 在脚本中引用 TextMeshPro 的 Text
+
+不是引用 `Text` 也不是 `TextMeshPro` 而是 `TextMeshProUGUI`
+
+```csharp
+using TMPro;
+
+TextMeshProUGUI currentTurnText
+```
+
+完。
