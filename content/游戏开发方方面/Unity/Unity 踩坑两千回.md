@@ -72,7 +72,7 @@ TextMeshProUGUI currentTurnText
 
 跟着官方教程安装完后发现没有关于 Unity 相关的方法（比如说`AddTo(Component/GameObject)`，但是已经可以看见 Observable 和 Subscribe 之类的方法。
 
-网上也没相关教程，只能自己摸索。琢磨了一会才注意到都是 Unity 相关的方法，所以所幸全部卸载重装然后关闭 Unity 重新打开项目就解决了。
+网上也没相关教程，只能自己摸索。琢磨了一会才注意到都是 Unity 相关的方法，所以所幸全部卸载重装然后关闭 Unity 重新打开项目 Play 再停止就解决了。
 
 完。
 
