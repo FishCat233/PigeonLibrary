@@ -88,7 +88,7 @@ TextMeshProUGUI currentTurnText
 The character with Unicode value \u5668 was not found in the [fusion-pixel-12px-proportional-zh_hans SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u25A1 in text object [Text (TMP)].
 ```
 
-想了一阵子没想明白怎么回事，字体本身在其他地方是没有问题的，而玄学的还是部分客户端播放器能看到部分看不到（还随缘来的），以为是中文字以及我之前安装字体操作问题（毕竟口口口也是 Unity 特色），直到后面发现连英文字母都能小概率口口口，给我整不会了。
+想了一阵子没想明白怎么回事，字体本身在其他地方是没有问题的，而玄学的还是部分客户端播放器能看到部分看不到（比如说A客户端能看到前半句，B能看到后半句，C看全是口口口，这还随缘来的），以为是中文字以及我之前安装字体操作问题（毕竟口口口也是 Unity 特色），直到后面发现连英文字母都能小概率口口口，给我整不会了。
 
 调成 Static 也没用，依旧是口口口（可能因为没有在 TMP 生成器里面手动生成图集）。
 
