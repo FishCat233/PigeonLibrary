@@ -76,3 +76,27 @@ TextMeshProUGUI currentTurnText
 
 完。
 
+## 【已解决】第七回 TMP 口口口口口口
+
+在网上没找到解决办法（网上搜出来一大片 Static 静态生成中文字的，但是我用的是 Dynamic），最后在 AI 处找到了。
+
+先从 TMP 字体导入开始列。简单的情况是字体本身就不支持中文，当然这坑比较好想到，按照网上稍微找找都能找到的一大堆教程导入字体就行，包括导入之后 Fallback 字体也一起设置了。
+
+而麻烦一点的就是我这个 WARNING
+
+```
+The character with Unicode value \u5668 was not found in the [fusion-pixel-12px-proportional-zh_hans SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u25A1 in text object [Text (TMP)].
+```
+
+想了一阵子没想明白怎么回事，字体本身在其他地方是没有问题的，而玄学的还是部分客户端播放器能看到部分看不到（还随缘来的），以为是中文字以及我之前安装字体操作问题（毕竟口口口也是 Unity 特色），直到后面发现连英文字母都能小概率口口口，给我整不会了。
+
+调成 Static 也没用，依旧是口口口（可能因为没有在 TMP 生成器里面手动生成图集）。
+
+最后还得是 AI 提醒，我才注意到字体资源文件还有 Altas Width 和 Altas Height 这种属性，把生成图集的尺寸调大就能塞下字体了，我还顺便勾上了 Multi Altas Texture，不过不知道有没有用，反正这么一通操作之后就不口口口了。
+
+*我真\*\*服了这个\*\*生成图集满了都不提示一下给人想怎么回事，谁能想到是图集大小问题。*
+
+对中文字可能还是生成图集好用吧，动态生成还是太弱智了。
+
+完。
+
