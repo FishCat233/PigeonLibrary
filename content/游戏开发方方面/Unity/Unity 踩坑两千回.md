@@ -1,6 +1,6 @@
 ---
 created: 2025-10-01
-updated: 2026-02-14
+updated: 2026-02-21
 ---
 慢慢踩吧，边踩边记。
 
@@ -97,6 +97,18 @@ The character with Unicode value \u5668 was not found in the [fusion-pixel-12px-
 *我真\*\*服了这个\*\*生成图集满了都不提示一下给人想怎么回事，谁能想到是图集大小问题。*
 
 对中文字可能还是生成图集好用吧，动态生成还是太弱智了。
+
+完。
+
+## 【已解决】第八回 Rigidbody2D OnTriggerStay2D 移动时才触发
+
+一个很莫名奇妙的设计。
+
+表现为 OnTriggerStay2D 只有在区域内移动的时候才会触发，而在静止不动却不会触发——虽然都是在碰撞区域内。
+
+原因是 Rigidbody2D 默认设置的 `Sleeping Mode` 是 `Start Awake`，如果不移动就不会检测碰撞了。
+
+还是感觉莫名其妙，没看懂为什么这么设计。
 
 完。
 
