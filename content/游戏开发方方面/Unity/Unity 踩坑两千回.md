@@ -1,6 +1,6 @@
 ---
 created: 2025-10-01
-updated: 2026-02-21
+updated: 2026-02-22
 ---
 慢慢踩吧，边踩边记。
 
@@ -112,3 +112,10 @@ The character with Unicode value \u5668 was not found in the [fusion-pixel-12px-
 
 完。
 
+## 【已解决】第九回 URP 不鼓励写多 Pass
+
+所以用 URP 的话直接写多 Pass 只会渲染第一个 Pass。
+
+坑得一批，AI 也是一个两个全是\*\*问不出来。
+
+完。
