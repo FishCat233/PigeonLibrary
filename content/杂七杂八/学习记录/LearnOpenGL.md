@@ -411,3 +411,28 @@ glDrawArrays(GL_TRIANGLES, 0, 3);
 ```
 
 `GL_TRIANGLES` 设置了我们需要绘制的是三角形，`0` 则是起始索引，`3` 是顶点数量。
+
+#### 元素缓冲对象 EBO
+
+同时也叫索引缓冲对象，简单说就是用来索引顶点的。比如说正方形用两个三角形表示有 6 个顶点，其中 2 个顶点数据是重复的，为了提高效率可以用 3 个顶点和 2 组索引来表示这两个三角形。
+
+用 `glGenBuffers` 创建 EBO，然后见原文，懒得写了：
+
+与VBO类似，我们先绑定EBO然后用glBufferData把索引复制到缓冲里。同样，和VBO类似，我们会把这些函数调用放在绑定和解绑函数调用之间，只不过这次我们把缓冲的类型定义为GL_ELEMENT_ARRAY_BUFFER。
+
+```c++
+glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+```
+
+注意：我们传递了GL_ELEMENT_ARRAY_BUFFER当作缓冲目标。最后一件要做的事是用glDrawElements来替换glDrawArrays函数，表示我们要从索引缓冲区渲染三角形。使用glDrawElements时，我们会使用当前绑定的索引缓冲对象中的索引进行绘制：
+
+```c++
+glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+```
+
+> 当目标是GL_ELEMENT_ARRAY_BUFFER的时候，VAO会储存glBindBuffer的函数调用。这也意味着它也会储存解绑调用，所以确保你没有在解绑VAO之前解绑索引数组缓冲，否则它就没有这个EBO配置了。
+
+明天再看吧。
+
