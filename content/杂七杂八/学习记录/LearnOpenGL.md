@@ -273,3 +273,4 @@ glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // �
 
 #### 顶点着色器
 
+下次再写。
