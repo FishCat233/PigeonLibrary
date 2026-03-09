@@ -391,7 +391,8 @@ glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0); gl
 // ..:: 绘制代码（渲染循环中） :: .. 
 
 // 4. 绘制物体 
-glUseProgram(shaderProgram); glBindVertexArray(VAO); 
+glUseProgram(shaderProgram);
+glBindVertexArray(VAO); 
 someOpenGLFunctionThatDrawsOurTriangle();
 ```
 
