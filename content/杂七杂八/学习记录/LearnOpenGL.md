@@ -273,4 +273,140 @@ glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // �
 
 #### 顶点着色器
 
-下次再写。
+首先要准备好着色器。
+
+```glsl
+#version 330 core
+layout (location = 0) in vec3 aPos;
+
+void main() {
+    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+}
+```
+
+这里的 location 设定了输入变量的位置值。
+
+#### 编译着色器
+
+准备好着色器后就可以编译
+
+```cpp
+const char *vertexShaderSource = "#version 330 core\n" "layout (location = 0) in vec3 aPos;\n" "void main()\n" "{\n" " gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n" "}\0";
+
+unsigned int vertexShader;
+vertexShader = glCreateShader(GL_VERTEX_SHADER); // 创建 GL_VERTEX_SHADER 对象
+
+glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+glCompileShader(vertexShader); // 编译
+```
+
+这里还提供了一种检测是否编译成功的办法：
+
+```cpp
+int success;
+char infoLog[512];
+glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+
+if (!success) {
+    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+}
+
+
+```
+
+#### 片段着色器
+
+```glsl
+#version 330 core
+out vec4 FragColor;
+
+void main() {
+    FragColor = vec4(1.0f,0.5f,0.2f,1.0f);
+}
+```
+
+这里用了一个简单的片段着色器。
+
+可以参考上面的代码编译片段着色器。通过 `GL_FRAGMENT_SHADER` 对象。
+
+#### 着色器程序
+
+两个着色器现在都编译了，剩下的事情是把两个着色器对象链接到一个用来渲染的着色器程序(Shader Program)中。
+
+ 类似的可以用 `glCreateProgram` 创建一个程序，然后 `glAttachShader` 附加着色器到程序上，用 `glLinkProgram` 来进行链接。
+
+```cpp
+unsigned int shaderProgram;
+shaderProgram = glCreateProgram()
+
+glAttachShader(shaderProgram, vertexShader)
+glAttachShader(shaderProgram, fragmentShader)
+glLinkProgram(shaderProgram)
+```
+
+类似的，`glGetProgramiv` 和 `glGetProgramInfoLog` 可以获取链接程序的结果。
+
+`glUseProgram` 可以激活创建的程序。
+
+> 在glUseProgram函数调用之后，每个着色器调用和渲染调用都会使用这个程序对象（也就是之前写的着色器)了。
+
+*感觉不如说：之后所有绘制命令都会使用这个程序。这样应该更准确一点。*
+
+**最重要的，在把着色器对象链接到程序对象以后，记得删除着色器对象。**
+
+```cpp
+glDeleteShader(vertexShader);
+glDeleteShader(fragmentShader);
+```
+
+#### 链接顶点数据
+
+顶点着色器允许任何顶点属性的形式输入，这有很强的灵活性，但是代价是要写明如何解析顶点属性数据。
+
+`glVertexAttribPointer` 可以告诉 OpenGL 如何解析顶点数据。*这函数参数特别多，我懒得写了，具体参考 learnOpenGL 教程原文吧，或者看我后面或许会贴的代码也行。*
+
+`glEnableVertexAttribArray` 可以启用顶点属性。
+
+*换句话说，这里 `glVertexAttribPointer` 定义了如何读顶点数据（类似内存一样的二进制），`glEnableVertexAttribArray` 则是将这个指针（解析器）作为当前的解析器。*
+
+#### 顶点数组对象 VAO
+
+> 顶点数组对象(Vertex Array Object, VAO)可以像顶点缓冲对象那样被绑定，任何随后的顶点属性调用都会储存在这个VAO中。这样的好处就是，当配置顶点属性指针时，你只需要将那些调用执行一次，之后再绘制物体的时候只需要绑定相应的VAO就行了。这使在不同顶点数据和属性配置之间切换变得非常简单，只需要绑定不同的VAO就行了。刚刚设置的所有状态都将存储在VAO中
+
+创建 VAO 用的是 `glGenVertexArrays` 和 绑定 `glBindVertexArray`
+
+```cpp
+// ..:: 初始化代码（只运行一次 (除非你的物体频繁改变)） :: .. 
+// 1. 绑定VAO 
+glBindVertexArray(VAO); 
+// 2. 把顶点数组复制到缓冲中供OpenGL使用 
+glBindBuffer(GL_ARRAY_BUFFER, VBO); 
+glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); 
+// 3. 设置顶点属性指针 
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0); glEnableVertexAttribArray(0); 
+
+// [...] 
+
+// ..:: 绘制代码（渲染循环中） :: .. 
+
+// 4. 绘制物体 
+glUseProgram(shaderProgram); glBindVertexArray(VAO); 
+someOpenGLFunctionThatDrawsOurTriangle();
+```
+
+> 就这么多了！前面做的一切都是等待这一刻，一个储存了我们顶点属性配置和应使用的VBO的顶点数组对象。一般当你打算绘制多个物体时，你首先要生成/配置所有的VAO（和必须的VBO及属性指针)，然后储存它们供后面使用。当我们打算绘制物体的时候就拿出相应的VAO，绑定它，绘制完物体后，再解绑VAO。
+
+*感觉还是有点懵逼。*
+
+#### 我们一直期待的三角形
+
+要想绘制我们想要的物体，OpenGL给我们提供了glDrawArrays函数，它使用当前激活的着色器，之前定义的顶点属性配置，和VBO的顶点数据（通过VAO间接绑定）来绘制图元。
+
+```c++
+glUseProgram(shaderProgram);
+glBindVertexArray(VAO);
+glDrawArrays(GL_TRIANGLES, 0, 3);
+```
+
+`GL_TRIANGLES` 设置了我们需要绘制的是三角形，`0` 则是起始索引，`3` 是顶点数量。
