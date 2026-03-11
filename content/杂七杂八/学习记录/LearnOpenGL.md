@@ -436,3 +436,106 @@ glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 明天再看吧。
 
+## Day 3
+
+### 着色器
+
+没啥空，今天学点少的吧。
+
+#### GLSL
+
+着色器开头总是要声明版本，然后是输入输出变量、 `uniform` 和 `main` 函数。每个着色器的入口都是 `main` 函数。
+
+一个典型的着色器有下面的结构：
+
+```c
+#version version_number
+in type in_variable_name;
+in type in_variable_name;
+
+out type out_variable_name;
+
+uniform type uniform_name;
+
+void main()
+{
+  // 处理输入并进行一些图形操作
+  ...
+  // 输出处理过的结果到输出变量
+  out_variable_name = weird_stuff_we_processed;
+}
+```
+
+谈论到顶点着色器的时候，每个输入变量也叫 **顶点属性**。顶点属性有上限，一般是硬件决定，OpenGL 保证至少有 16个包含 4 分量的顶点属性。
+
+`GL_MAX_VERTEX_ATTRIBS` 可以获取具体的顶点属性上限。
+
+#### 数据类型
+
+GLSL 有大部分类似 C 的基础数据类型例如 `int`、`float`、`double`、`uint`、`bool`。还有两种容器类型（Vector、Matrix）。
+
+##### 向量 Vector
+
+GLSL 的向量是一个可以包含 2、3 或者 4 个分量的容器。比如说 `vecn` `bvecn` `ivecn` `uvecn` `dvecn`。
+
+大部分时候用的都是 `vecn`。
+
+*`.x .y .z .w`，跟 Shaderlab 差不多。不过 `rgba` `stpq` 也能用来访问*
+
+向量这一数据类型也允许一些有趣而灵活的分量选择方式，叫做**重组(Swizzling)**。重组允许这样的语法：
+
+```glsl
+vec2 someVec;
+vec4 differentVec = someVec.xyxx;
+vec3 anotherVec = differentVec.zyw;
+vec4 otherVec = someVec.xxxx + anotherVec.yxzy;
+```
+
+*非常好语法糖，使我旋转。*
+
+#### 输入与输出
+
+`in` 和 `out` 用来设定输入和输出。
+
+不过顶点着色器的输入特别一点，因为它直接从顶点数据中接收输入。用 `location` 这个元数据来指定输入变量，这样才可以在 CPU 上配置顶点属性。
+
+`layout(location=0)` 的 `layout` 可以把顶点着色器链接到顶点数据。
+
+这里原文有个注释：
+
+> 你也可以忽略`layout (location = 0)`标识符，通过在OpenGL代码中使用glGetAttribLocation查询属性位置值(Location)，但是我更喜欢在着色器中设置它们，这样会更容易理解而且节省你（和OpenGL）的工作量。
+
+不过我感觉用 `location` 也更舒服。
+
+片段着色器则是另一个特例，它需要输出一个 `vec4` 的颜色变量。
+
+**顶点着色器**
+
+```glsl
+#version 330 core
+layout (location = 0) in vec3 aPos; // 位置变量的属性位置值为0
+
+out vec4 vertexColor; // 为片段着色器指定一个颜色输出
+
+void main()
+{
+    gl_Position = vec4(aPos, 1.0); // 注意我们如何把一个vec3作为vec4的构造器的参数
+    vertexColor = vec4(0.5, 0.0, 0.0, 1.0); // 把输出变量设置为暗红色
+}
+```
+
+**片段着色器**
+
+```glsl
+#version 330 core
+out vec4 FragColor;
+
+in vec4 vertexColor; // 从顶点着色器传来的输入变量（名称相同、类型相同）
+
+void main()
+{
+    FragColor = vertexColor;
+}
+```
+
+明天再看吧，感觉到这里差不多了。
