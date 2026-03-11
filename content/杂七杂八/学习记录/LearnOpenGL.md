@@ -1,6 +1,6 @@
 ---
 created: 2026-03-08
-updated: 2026-03-10
+updated: 2026-03-11
 ---
 ## Day 1
 
@@ -438,9 +438,9 @@ glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 ## Day 3
 
-### 着色器
-
 没啥空，今天学点少的吧。
+
+### 着色器（上半）
 
 #### GLSL
 
@@ -539,3 +539,93 @@ void main()
 ```
 
 明天再看吧，感觉到这里差不多了。
+
+## Day 4
+
+### 着色器（下半）
+
+#### Uniform
+
+Uniform 和顶点属性不同。uniform 是全局的，并且可以被着色器程序的任意着色器（在任意阶段访问）。
+
+```glsl
+#version 330 core
+out vec4 FragColor;
+
+uniform vec4 ourColor; // 在OpenGL程序代码中设定这个变量
+
+void main()
+{
+    FragColor = ourColor;
+}
+```
+
+这里有个注意的点：
+
+> 如果你声明了一个uniform却在GLSL代码中没用过，编译器会静默移除这个变量，导致最后编译出的版本中并不会包含它，这可能导致几个非常麻烦的错误，记住这点！
+
+这里有一个变色的示例，配合上面的 shader。
+
+```c++
+float timeValue = glfwGetTime();
+float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+glUseProgram(shaderProgram);
+glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+```
+
+使用 `glfwGetTime` 获取运行的描述，然后经过变换，用 `glGetUniformLocation` 获取 `ourColor` 的位置值（没有会返回 `-1` ），然后用 `glUniform4f` 设置当前激活的 Program 中 uniform 的值。
+
+*有点麻烦，在设置之前需要查询 uniform 的位置（索引）值，然后才能设置。*
+
+这里有个小简介，大概意思是因为 OpenGL 是 C 库，不允许重载，所以通过后缀来进行区别。比如上面的`glUniform4f` 的 `f` 就是一个后缀。常见的有 `f` `i` `ui`(unsigned int) `3f` `fv`.
+
+#### 更多属性！
+
+直接看代码。
+
+```c++
+float vertices[] = {
+    // 位置              // 颜色
+     0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // 右下
+    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // 左下
+     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // 顶部
+};
+```
+
+```glsl
+#version 330 core
+layout (location = 0) in vec3 aPos;   // 位置变量的属性位置值为 0 
+layout (location = 1) in vec3 aColor; // 颜色变量的属性位置值为 1
+
+out vec3 ourColor; // 向片段着色器输出一个颜色
+
+void main()
+{
+    gl_Position = vec4(aPos, 1.0);
+    ourColor = aColor; // 将ourColor设置为我们从顶点数据那里得到的输入颜色
+}
+```
+
+```glsl
+#version 330 core
+out vec4 FragColor;  
+in vec3 ourColor;
+
+void main()
+{
+    FragColor = vec4(ourColor, 1.0);
+}
+```
+
+终于讲这个了，配置顶点属性。
+
+```c++
+// 位置属性
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+glEnableVertexAttribArray(0);
+// 颜色属性
+glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
+glEnableVertexAttribArray(1);
+```
+
