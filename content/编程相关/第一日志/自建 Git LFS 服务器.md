@@ -30,7 +30,7 @@ updated: "2026-03-16"
 
 ### lock verify
 
-这个服务器不支持 `lock verify`，会有这样的字样：
+这个服务器不支持 `lock verify`，会有这样的字样（这里报错日志连不上是因为还有其他的网络错误）：
 
 ```bash
 $ git push origin main
