@@ -1,6 +1,6 @@
 ---
 created: 2026-02-09
-updated: 2026-02-11
+updated: 2026-05-11
 ---
 Fisher-Yates 算法用于随机排列数组元素。
 
@@ -21,13 +21,25 @@ namespace FishONU.Utils
     public static class Algorithm  
     {  
         public static void FisherYatesShuffle<T>(this IList<T> list)  
-        {            for (int i = 0; i < list.Count; i++)  
-            {                var j = Random.Range(0, i + 1);  
+        {            
+            for (int i = 0; i < list.Count; i++)  
+            {                
+                var j = Random.Range(0, i + 1);  
                 (list[j], list[i]) = (list[i], list[j]);  
             }  
         }
     }  
 }
+```
+
+```Python
+import random
+
+def shuttle(lst: list[any]) -> list[any]:
+    for i, v in enumerate(lst):
+        e = random.randint(0,i)
+        lst[e], lst[i] = lst[i], lst[e]
+    return lst
 ```
 
 完。
