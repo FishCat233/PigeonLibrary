@@ -1,6 +1,6 @@
 ---
-created: "2026-05-18"
-updated: "2026-05-18"
+created: 2026-05-18
+updated: 2026-05-19
 ---
 JPS（Jump Point Search）算法是基于 A-star 算法进行改进得来的寻路算法，又名「跳点搜索」或「拐点寻路」。文章参考资料附上了[论文链接](http://grastien.net/ban/articles/hg-aaai11.pdf)。
 
