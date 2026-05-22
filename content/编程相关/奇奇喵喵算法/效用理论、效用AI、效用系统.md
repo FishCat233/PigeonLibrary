@@ -18,4 +18,5 @@ updated: "2026-05-23"
 
 ## 参考资料
 - [游戏人工智能开发之6种决策方法 - Bill Yuan - 博客园](https://www.cnblogs.com/sevenyuan/p/5276320.html)
+- [AI中的效用理论](https://zhuanlan.zhihu.com/p/671633239)
 - [【伏羲讲堂】游戏AI行为选择算法一览 - 知乎](https://zhuanlan.zhihu.com/p/379978251)
