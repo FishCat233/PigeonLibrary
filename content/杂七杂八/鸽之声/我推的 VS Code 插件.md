@@ -70,6 +70,10 @@ updated: "2026-06-24"
 
 [Wakatime](https://marketplace.visualstudio.com/items?itemName=WakaTime.vscode-wakatime) 其实是一家公司的服务产品，能够从统计相当详细的编码用时，比如说 AI 率、编码用时、文件编码用时。
 
+这个用途非常多，比如说光是直接看编码时间就能反应出到底泡在代码里多久了，通过官网的免费周报可以看到每周的编码时间。
+
+另一个用途则是用来进行项目管理。比如说我之前通过 Wakatime 来收集数据，通过数据来估算完成一个 Issue 或者一个功能需要多少时间，然后根据估算结果调整每周的开发计划。
+
 并且还具有相当的可玩性。比如说我通过 Wakatime 的官方 API 进行开发，配置了一个 Cloudflare Worker 读取时间并调用 [Moe Counter](https://count.getloli.com/) 来包装 Wakatime 的总共代码时间，然后放到 Github 展示，效果大概就是下面这样：
 
 ![[Pasted image 20260624214952.png]]
