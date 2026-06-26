@@ -80,7 +80,7 @@ updated: "2026-06-24"
 
 当然如果只是简单显示时间也不用这么麻烦，Wakatime 实际上有自带的 Badget 小物件，可以上网搜搜就能找到教程。
 
-### VS Code Counter: 代码计数器
+### VS Code Counter: %% 代码计数器 %%
 
 Wakatime 是计时，而 [VS Code Counter](https://marketplace.visualstudio.com/items?itemName=uctakeoff.vscode-counter) 则是行数计数。
 
