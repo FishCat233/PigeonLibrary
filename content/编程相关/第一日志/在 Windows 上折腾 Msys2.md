@@ -4,7 +4,9 @@ updated: "2026-07-15"
 ---
 由于 Powershell 是世界上最好用的 Shell，能够和 PHP 比肩的存在，因此我决定折腾*不那么好用*的 msys2。
 
-另外，当你看到这篇文章的时候，我肯定尝试在 Windows 上折腾 msys2，而且还遇到了困难。
+~~另外，当你看到这篇文章的时候，我肯定尝试在 Windows 上折腾 msys2，而且还遇到了困难。~~
+
+原来是打算折腾 Git Bash 的，后面发现 Git Bash 的 msys 是极简版，连 pacman 都没有，感觉不如折腾已经装过的 msys2.
 
 ## Windows Terminal 配置 msys2
 
@@ -15,6 +17,10 @@ updated: "2026-07-15"
 省流说就是使用 `C:/msys64/msys2_shell.cmd -defterm -here -no-start -ucrt64`.
 
 甚至 `.cmd` 还支持使用 `-shell zsh` 这样的选项来指定启动的 shell。*不过我不会用，因为会让配置很难找。*
+
+## 安装 zsh
+
+
 
 ## 参考资料
 
