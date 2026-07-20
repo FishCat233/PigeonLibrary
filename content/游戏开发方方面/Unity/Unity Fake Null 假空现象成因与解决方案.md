@@ -2,7 +2,7 @@
 created: "2026-07-20"
 updated: "2026-07-20"
 ---
-## Unity 中“假空”对象的本质
+## Unity 中「假空」对象的本质
 
 调用 `Destroy(gameObject)` 后，`if (gameObject == null)` 常常返回 `True`。但紧接着用 `ReferenceEquals(gameObject, null)` 或 `gameObject is null` 判断，结果却是 `False`。同一个变量，判空结果截然相反，这就是 Unity 经典的“假空”现象。
 
