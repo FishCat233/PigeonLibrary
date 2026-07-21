@@ -4,11 +4,11 @@ updated: "2026-07-20"
 ---
 ## Unity 中「假空」对象的本质
 
-调用 `Destroy(gameObject)` 后，`if (gameObject == null)` 常常返回 `True`。但紧接着用 `ReferenceEquals(gameObject, null)` 或 `gameObject is null` 判断，结果却是 `False`。同一个变量，判空结果截然相反，这就是 Unity 经典的“假空”现象。
+调用 `Destroy(gameObject)` 后，`if (gameObject == null)` 常常返回 `True`。但紧接着用 `ReferenceEquals(gameObject, null)` 或 `gameObject is null` 判断，结果却是 `False`。同一个变量，判空结果截然相反，这就是 Unity 经典的「假空」现象。
 
 ## 根本原因在于 Unity 的双层架构
 
-Unity 引擎的核心是 C++ 编写的。游戏对象的变换组件、渲染状态、物理属性等实质数据，全部存放在 C++ 侧的非托管内存中。我们在 C# 脚本里操作的 `GameObject` 和 `Component`，本质上只是一个指向底层数据的“包装器”句柄。
+Unity 引擎的核心是 C++ 编写的。游戏对象的变换组件、渲染状态、物理属性等实质数据，全部存放在 C++ 侧的非托管内存中。我们在 C# 脚本里操作的 `GameObject` 和 `Component`，本质上只是一个指向底层数据的「包装器」句柄。
 
 当我们调用 `Destroy` 时，Unity 立即释放了 C++ 侧的原生内存，但 C# 托管堆上的这个包装器对象并没有被回收，它依然存活，只是内部指向 C++ 对象的指针被置为了无效。之所以 `==` 返回 `True`，是因为 Unity 重载了 `GameObject` 和 `Component` 的 `==` 运算符——这个重载不去比较引用地址，而是去检查“对应的 C++ 原生对象是否还存在”。如果不存在，就返回 `True`，以此模拟出“对象已销毁”的假象。
 
@@ -31,7 +31,7 @@ obj.transform.position = Vector3.zero; // 直接抛出 MissingReferenceException
 
 ## 「假空」引用的危害在于 GC 压力
 
-许多人误以为“假空”引用会累积 C++ 内存泄漏，这不对。真正的问题是 C# 托管堆的压力。失效的包装器本身虽然很轻量，但它依然占据托管内存。如果这些包装器被成员变量、`List`、`Dictionary` 等 GC 根长期持有，它们就不会被回收。频繁地创建和销毁 GameObject，又始终不释放这些根引用，托管堆上就会堆积大量死去的包装器。当堆内存达到阈值，.NET 的垃圾回收就会被频繁触发，而 GC 触发时会挂起所有线程，直接表现为游戏卡顿。
+「假空」引用的累积会产生真正的问题：增加 C# 托管堆的压力。失效的包装器本身虽然很轻量，但它依然占据托管内存。如果这些包装器被成员变量、`List`、`Dictionary` 等 GC 根长期持有，它们就不会被回收。频繁地创建和销毁 GameObject，又始终不释放这些根引用，托管堆上就会堆积大量死去的包装器。当堆内存达到阈值，.NET 的垃圾回收就会被频繁触发，而 GC 触发时会挂起所有线程，直接表现为游戏卡顿。
 
 ## 解决方案的核心是切断 GC 根
 
