@@ -28,6 +28,12 @@ Unity 有很多组件，而 GameObject（以下简称 GO）是组件的容器—
 
 这引出了一条技巧： **尽可能使用单一 MonoBehaviour。如果 MonoBehaviour 需要拆分，优先考虑用 C# 类组合而不是拆分多 MonoBehaviour。**
 
+### 预制件
+
+在预制体一章，Unity 用户手册用的词是 **pack** 和 **unpack** 来形容把一个 GO 变为 Prefab 以及把 Prefab 解关联成为 GO。
+
+这个用词 pack 和 unpack 看起来有点莫名其妙。综合 scene 和 prefab 本质都是文件数据，所以我个人猜测去理解地说，pack 指的是把 GO（本质是 scene 文件下的信息数据）抽离出去成为单个 Prefab 文件，而原来的地方则保留一个引用数据。unpack 则是将 Prefab 数据重新嵌入进 scene 的数据中。
+
 
 
 ## 有用的链接
