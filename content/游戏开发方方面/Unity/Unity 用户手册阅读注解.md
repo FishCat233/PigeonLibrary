@@ -22,7 +22,11 @@ updated: 2026-07-29
 
 Unity 分出了场景、组件、预制体这几个概念，与 godot 那种统一成节点的思想不太相同，尤其是组件。
 
-Unity 有很多组件，而 GameObject（以下简称 GO）是组件的容器——这本质上是一个经典的组件架构（可以参考 [游戏设计模式：组件模式](https://gpp.tkchu.me/component.html#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81)）。例如，GO 本身只有 Transform 属性（虽然 Unity 管这叫组件，但是从组件架构看本质上是将高频常用的共享属性强行绑定到 GO 上了，即便是用不到 Transform 的 GO 也要持有 GO）。
+Unity 有很多组件，而 GameObject（以下简称 GO）是组件的容器——这本质上是一个经典的组件架构（可以参考 [游戏设计模式：组件模式](https://gpp.tkchu.me/component.html#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81)）。例如，Unity 手册说 Transform 组件不能被移除，并且必然存在——用组件架构视角来说，Transform 实质上是 GO 本身的属性，而不是外部添加的组件（因为组件是可选的），对于那些不关心 Transform 的 GO 来说，他们依然要承受 Transform 存在的开销。
+
+引入组件架构的原因在于解耦代码，通过将代码按领域或者工作内容切分成组件，再用组件组合来成为一个整体，从而降低在修改单个组件时需要的知识。因而对于我们自定的组件来说，也应该遵循这个原则，要么选择一个 all in one 的组件，要么选择能拆分干净的小组件团，然而对 Unity 来说，一个 all in one 的组件更划算，因为一个 GO 如果有两个 MonoBehaviour，那么 10 个 GO 就会有 20 个组件，加上 Unity 抽象出组件需要的开销，实际上这会消耗不少性能。
+
+这引出了一条技巧： **尽可能使用单一 MonoBehaviour。如果使用多个自定组件，则保持组件间解耦。**
 
 ## 有用的链接
 - [Unity User Manual 2022.3 (LTS) - Unity 手册](https://docs.unity3d.com/cn/2022.3/Manual/UnityManual.html)
