@@ -26,7 +26,7 @@ Unity 有很多组件，而 GameObject（以下简称 GO）是组件的容器—
 
 引入组件架构的原因在于解耦代码，通过将代码按领域或者工作内容切分成组件，再用组件组合来成为一个整体，从而降低在修改单个组件时需要的知识。因而对于我们自定的组件来说，也应该遵循这个原则，要么选择一个 all in one 的组件，要么选择能拆分干净的小组件团，然而对 Unity 来说，一个 all in one 的组件更划算，因为一个 GO 如果有两个 MonoBehaviour，那么 10 个 GO 就会有 20 个组件，加上 Unity 抽象出组件需要的开销，实际上这会消耗不少性能。
 
-这引出了一条技巧： **尽可能使用单一 MonoBehaviour。如果使用多个自定组件，则保持组件间解耦。**
+这引出了一条技巧： **尽可能使用单一 MonoBehaviour。如果 MonoBehaviour 需要拆分，优先考虑用 C# 类组合而不是拆分多 MonoBehaviour。**
 
 ## 有用的链接
 - [Unity User Manual 2022.3 (LTS) - Unity 手册](https://docs.unity3d.com/cn/2022.3/Manual/UnityManual.html)
