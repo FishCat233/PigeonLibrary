@@ -34,6 +34,8 @@ Unity 有很多组件，而 GameObject（以下简称 GO）是组件的容器—
 
 这个用词 pack 和 unpack 看起来有点莫名其妙。综合 scene 和 prefab 本质都是文件数据，所以我个人猜测去理解地说，pack 指的是把 GO（本质是 scene 文件下的信息数据）抽离出去成为单个 Prefab 文件，而原来的地方则保留一个引用数据。unpack 则是将 Prefab 数据重新嵌入进 scene 的数据中。
 
+至少我觉得，从文件角度来说，pack 和 unpack 会显得更加自然。
+
 
 
 ## 有用的链接
